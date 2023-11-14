@@ -83,9 +83,9 @@ abstract class Horde_HashTable_Base implements ArrayAccess, Serializable
     public function __set($name, $val)
     {
         switch ($name) {
-        case 'prefix':
-            $this->_params['prefix'] = $val;
-            break;
+            case 'prefix':
+                $this->_params['prefix'] = $val;
+                break;
         }
     }
 
@@ -94,11 +94,11 @@ abstract class Horde_HashTable_Base implements ArrayAccess, Serializable
     public function __get($name)
     {
         switch ($name) {
-        case 'locking':
-            return ($this instanceof Horde_HashTable_Lock);
+            case 'locking':
+                return ($this instanceof Horde_HashTable_Lock);
 
-        case 'persistent':
-            return $this->_persistent;
+            case 'persistent':
+                return $this->_persistent;
         }
     }
 
@@ -324,30 +324,32 @@ abstract class Horde_HashTable_Base implements ArrayAccess, Serializable
 
     /**
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return $this->exists($offset);
     }
 
     /**
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
 
     /**
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        return $this->set($offset, $value);
+        $this->set($offset, $value);
+        return;
     }
 
     /**
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
-        return $this->delete($offset);
+        $this->delete($offset);
+        return;
     }
 
     /* Serializable methods. */
@@ -365,6 +367,16 @@ abstract class Horde_HashTable_Base implements ArrayAccess, Serializable
     {
         $this->_params = @unserialize($data);
         $this->_init();
+    }
+
+    public function __serialize(): array
+    {
+        return $this->params;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
 }
